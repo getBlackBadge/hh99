@@ -1,0 +1,18 @@
+services:
+  app:
+    image: "node:18-alpine"
+    container_name: nestjs-debug
+    build:
+      context: .
+      dockerfile: Dockerfile
+    user: "node"
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    tty: true
+    command: npx nodemon
