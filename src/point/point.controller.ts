@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Patch, ValidationPipe, BadRequestException, NotFoundException, Injectable } from "@nestjs/common";
 import { PointHistory, UserPoint } from "./point.model";
-import { PointBody as PointDto } from "./point.dto";
+import { PointBodyDto, UserPointResponseDto, PointHistoryResponseDto } from "./point.dto";
 import { PointService } from "./point.service";
-import { UserManager } from "./managers/user-manager";
+import { UserManager } from '../common/user/user-manager';
 import { UserPointTable } from '../database/userpoint.table';
 
 @Controller('/point')
@@ -18,20 +18,22 @@ export class PointController {
     }
 
     @Get(':id')
-    async point(@Param('id') id: string): Promise<UserPoint> {
+    async point(@Param('id') id: string): Promise<UserPointResponseDto> {
         try {
             const userId = this.userManager.validateUserId(id);
-            return await this.pointService.getPoint(userId);
+            const userPoint = await this.pointService.getPoint(userId);
+            return userPoint as UserPointResponseDto;
         } catch (error) {
             throw new NotFoundException(error.message);
         }
     }
 
     @Get(':id/histories')
-    async history(@Param('id') id: string): Promise<PointHistory[]> {
+    async history(@Param('id') id: string): Promise<PointHistoryResponseDto[]>  {
         try {
             const userId = this.userManager.validateUserId(id);
-            return await this.pointService.getHistories(userId);
+            const histories = await this.pointService.getHistories(userId);
+            return histories as PointHistoryResponseDto[]
         } catch (error) {
             throw new NotFoundException(error.message);
         }
@@ -40,11 +42,12 @@ export class PointController {
     @Patch(':id/charge')
     async charge(
         @Param('id') id: string,
-        @Body(ValidationPipe) pointDto: PointDto,
-    ): Promise<UserPoint> {
+        @Body(ValidationPipe) PointBodyDto: PointBodyDto,
+    ): Promise<UserPointResponseDto> {
         try {
             const userId = this.userManager.validateUserId(id);
-            return await this.pointService.charge(userId, pointDto);
+            const userPoint = await this.pointService.charge(userId, PointBodyDto);
+            return userPoint as UserPointResponseDto;
         } catch (error) {
             throw new BadRequestException(error.message);
         }
@@ -53,11 +56,12 @@ export class PointController {
     @Patch(':id/use')
     async use(
         @Param('id') id: string,
-        @Body(ValidationPipe) pointDto: PointDto,
-    ): Promise<UserPoint> {
+        @Body(ValidationPipe) PointBodyDto: PointBodyDto,
+    ): Promise<UserPointResponseDto> {
         try {
             const userId = this.userManager.validateUserId(id);
-            return await this.pointService.use(userId, pointDto);
+            const userPoint = await this.pointService.use(userId, PointBodyDto);
+            return userPoint as UserPointResponseDto;
         } catch (error) {
             throw new BadRequestException(error.message);
         }

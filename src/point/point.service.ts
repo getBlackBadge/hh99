@@ -1,27 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { UserPointTable } from '../database/userpoint.table';
 import { PointHistoryTable } from '../database/pointhistory.table';
 import { UserPoint, PointHistory, TransactionType } from './point.model';
-import { PointBody as PointDto } from "./point.dto";
-import { LockManager } from './managers/lock-manager';
-import { PointManager } from './managers/point-manager';
-import { UserManager } from './managers/user-manager';
+import { PointDto } from "./point.dto";
+
+import { UserManager } from '../common/user/user-manager';
+import { PointManager } from '../common/point/point-manager';
+import { LockManager } from '../common/lock/lock-manager';
+
 
 @Injectable()
 export class PointService {
 
-  private lockManager: LockManager;
-  private pointManager: PointManager;
-  private userManager: UserManager;
-
   constructor(
-    private readonly userDb: UserPointTable,
-    private readonly historyDb: PointHistoryTable,
-  ) {
-    this.lockManager = new LockManager();
-    this.pointManager = new PointManager();
-    this.userManager = new UserManager(userDb);
-  }
+    private readonly historyDb: PointHistoryTable, 
+    private readonly userManager: UserManager, 
+    private readonly pointManager: PointManager, 
+    private readonly lockManager: LockManager,   
+  ) {}
 
   async getPoint(id: number): Promise<UserPoint> {
     return this.userManager.getUser(id);
