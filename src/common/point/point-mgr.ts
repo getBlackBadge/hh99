@@ -1,12 +1,14 @@
-import { UserPoint } from '../../point/point.model';
+import { UserPoint, TransactionType } from '../../point/point.model';
 import { PointDto } from '../../point/point.dto';
 import { Injectable } from '@nestjs/common';
+import { PointHistoryTable } from '../../database/pointhistory.table';
+import { PointHistory } from '../../point/point.model';
 
 @Injectable()
 export class PointManager {
   private maxChargeLimit: number;
 
-  constructor() {
+  constructor(private readonly historyDb: PointHistoryTable) {
     this.maxChargeLimit = parseInt(process.env.MAX_CHARGE_LIMIT || '1000000', 10);
   }
 
@@ -39,5 +41,11 @@ export class PointManager {
   use(user: UserPoint, amount: number): void {
     user.point -= amount;
     user.updateMillis = Date.now();
+  }
+  async recordHistory(userId: number, amount: number, type: TransactionType, updateMillis: number): Promise<void> {
+    await this.historyDb.insert(userId, amount, type, updateMillis);
+  }
+  async getHistoriesByUserId(userId: number): Promise<PointHistory[]> {
+    return this.historyDb.selectAllByUserId(userId);
   }
 }

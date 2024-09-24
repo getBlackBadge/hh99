@@ -3,9 +3,9 @@ import { PointHistoryTable } from '../database/pointhistory.table';
 import { UserPoint, PointHistory, TransactionType } from './point.model';
 import { PointDto } from "./point.dto";
 
-import { UserManager } from '../common/user/user-manager';
-import { PointManager } from '../common/point/point-manager';
-import { LockManager } from '../common/lock/lock-manager';
+import { UserManager } from '../common/user/user-mgr';
+import { PointManager } from '../common/point/point-mgr';
+import { LockManager } from '../common/lock/lock-mgr';
 
 
 @Injectable()
@@ -24,7 +24,7 @@ export class PointService {
 
   async getHistories(id: number): Promise<PointHistory[]> {
     await this.userManager.getUser(id); // This will throw if user not found
-    return this.historyDb.selectAllByUserId(id);
+    return this.pointManager.getHistoriesByUserId(id);
   }
 
   async charge(id: number, pointDto: PointDto): Promise<UserPoint> {
@@ -36,12 +36,7 @@ export class PointService {
       
       await this.userManager.updateUserPoint(id, user.point);
     
-      await this.historyDb.insert(
-        id,
-        pointDto.amount,
-        TransactionType.CHARGE,
-        user.updateMillis,
-      );
+      await this.pointManager.recordHistory(id, pointDto.amount, TransactionType.USE, user.updateMillis);
       
       return user;
     });
@@ -56,12 +51,8 @@ export class PointService {
 
       await this.userManager.updateUserPoint(id, user.point);
     
-      await this.historyDb.insert(
-        id,
-        pointDto.amount,
-        TransactionType.USE,
-        user.updateMillis,
-      );
+      await this.pointManager.recordHistory(id, pointDto.amount, TransactionType.USE, user.updateMillis);
+      
       return user;
     });
   }

@@ -17,7 +17,7 @@ export class UserPointResponseDto {
     updateMillis: number
   }
   
-  export class PointHistoryResponseDto {
+export class PointHistoryResponseDto {
     id: number
     userId: number
     type: TransactionType

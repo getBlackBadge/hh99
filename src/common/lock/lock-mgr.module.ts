@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { LockManager } from './lock-manager';
+import { LockManager } from './lock-mgr';
 
 @Module({
   providers: [LockManager],

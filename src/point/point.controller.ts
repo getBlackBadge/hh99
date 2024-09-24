@@ -2,19 +2,16 @@ import { Body, Controller, Get, Param, Patch, ValidationPipe, BadRequestExceptio
 import { PointHistory, UserPoint } from "./point.model";
 import { PointBodyDto, UserPointResponseDto, PointHistoryResponseDto } from "./point.dto";
 import { PointService } from "./point.service";
-import { UserManager } from '../common/user/user-manager';
-import { UserPointTable } from '../database/userpoint.table';
+import { UserManager } from '../common/user/user-mgr';
 
 @Controller('/point')
 @Injectable()
 export class PointController {
-    private userManager: UserManager;
 
     constructor(
         private readonly pointService: PointService,
-        private readonly userDb: UserPointTable
+        private readonly userManager: UserManager
     ) {
-        this.userManager = new UserManager(this.userDb);
     }
 
     @Get(':id')
