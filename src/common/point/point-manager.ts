@@ -1,6 +1,8 @@
-import { UserPoint } from '../point.model';
-import { PointBody as PointDto } from "../point.dto";
+import { UserPoint } from '../../point/point.model';
+import { PointDto } from '../../point/point.dto';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class PointManager {
   private maxChargeLimit: number;
 

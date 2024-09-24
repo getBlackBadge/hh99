@@ -1,6 +1,8 @@
 import { UserPointTable } from '../../database/userpoint.table';
-import { UserPoint } from '../point.model';
+import { UserPoint } from '../../point/point.model';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UserManager {
   constructor(private readonly userDb: UserPointTable) {}
 

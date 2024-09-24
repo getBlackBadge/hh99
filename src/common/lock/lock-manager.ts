@@ -1,3 +1,6 @@
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
 export class LockManager {
     private locks: Map<number, Promise<void>> = new Map();
   
