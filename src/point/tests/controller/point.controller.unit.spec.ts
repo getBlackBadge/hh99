@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PointController } from '../point.controller';
-import { PointService } from '../point.service';
+import { PointController } from '../../controller/point.controller';
+import { PointService } from '../../service/point.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { UserPoint, PointHistory, TransactionType } from '../point.model';
+import { UserPoint, PointHistory, TransactionType } from '../../point.model';
 
 describe('PointController', () => {
   let controller: PointController;

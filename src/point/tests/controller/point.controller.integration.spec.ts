@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PointController } from '../point.controller';
-import { PointService } from '../point.service';
-import { UserPointTable } from '../../database/userpoint.table';
-import { PointHistoryTable } from '../../database/pointhistory.table';
+import { PointController } from '../../point.controller';
+import { PointService } from '../../point.service';
+import { UserPointTable } from '../../../database/userpoint.table';
+import { PointHistoryTable } from '../../../database/pointhistory.table';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { TransactionType } from "../point.model";
+import { TransactionType } from "../../point.model";
 
 describe('PointController (integration)', () => {
   let controller: PointController;

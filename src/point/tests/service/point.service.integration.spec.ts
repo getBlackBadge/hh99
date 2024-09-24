@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PointService } from '../point.service';
-import { UserPointTable } from '../../database/userpoint.table';
-import { PointHistoryTable } from '../../database/pointhistory.table';
-import { UserPoint } from '../point.model';
+import { PointService } from '../../point.service';
+import { UserPointTable } from '../../../database/userpoint.table';
+import { PointHistoryTable } from '../../../database/pointhistory.table';
+import { UserPoint } from '../../point.model';
 
 describe('PointService Integration Tests', () => {
   let service: PointService;
