@@ -1,0 +1,125 @@
+{
+	"info": {
+		"_postman_id": "bac4057c-d1b3-4eb9-89e3-f43411bd6d20",
+		"name": "1st-tdd",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28758425"
+	},
+	"item": [
+		{
+			"name": "helloworld",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "charge point",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"amount\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/point/1/charge",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"point",
+						"1",
+						"charge"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "use point",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"amount\": 100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/point/1/use",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"point",
+						"1",
+						"use"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get point",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/point/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"point",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get point history",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/point/1/histories",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"point",
+						"1",
+						"histories"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
