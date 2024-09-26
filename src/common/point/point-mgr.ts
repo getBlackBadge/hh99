@@ -1,51 +1,55 @@
-import { UserPoint, TransactionType } from '../../point/point.model';
+import { UserPoint } from '../../point/point.model';
 import { PointDto } from '../../point/point.dto';
 import { Injectable } from '@nestjs/common';
-import { PointHistoryTable } from '../../database/pointhistory.table';
-import { PointHistory } from '../../point/point.model';
-
+import { RequestValidityError } from '../exceptions/validity-error';
+import { PointNotEnoughError, PointExceededError } from '../exceptions/point-error';
 @Injectable()
 export class PointManager {
-  private maxChargeLimit: number;
+  private maxPointLimit: number;
 
-  constructor(private readonly historyDb: PointHistoryTable) {
-    this.maxChargeLimit = parseInt(process.env.MAX_CHARGE_LIMIT || '1000000', 10);
+  constructor() {
+    this.maxPointLimit = parseInt(process.env.MAX_POINT_LIMIT || '10000000', 10);
+  }
+
+  private static readonly ERROR_MESSAGES = {
+    NEGATIVE_AMOUNT: 'Amount must be positive',
+    EXCEEDS_CHARGE_LIMIT: 'Amount exceeds maximum charge limit',
+    INSUFFICIENT_POINTS: 'Insufficient points',
+    EXCEEDS_POINT_LIMIT: 'Point exceeds maximum limit',
+  };
+
+  public static getErrorMessage(key: keyof typeof PointManager.ERROR_MESSAGES): string {
+    return PointManager.ERROR_MESSAGES[key];
+  }
+
+  validateAmount(amount: number): void {
+    if (amount <= 0) {
+      throw new RequestValidityError(PointManager.ERROR_MESSAGES.NEGATIVE_AMOUNT);
+    }
   }
 
   validateCharge(pointDto: PointDto): void {
-    if (pointDto.amount <= 0) {
-      throw new Error('Charge amount must be positive');
-    }
-    if (pointDto.amount > this.maxChargeLimit) { 
-      throw new Error('Charge amount exceeds maximum limit');
-    }
+    this.validateAmount(pointDto.amount);
   }
 
   validateUse(user: UserPoint, pointDto: PointDto): void {
-    if (pointDto.amount <= 0) {
-      throw new Error('Use amount must be positive');
-    }
+    this.validateAmount(pointDto.amount);
     if (pointDto.amount > user.point) {
-      throw new Error('Insufficient points');
-    }
-    if (pointDto.amount > this.maxChargeLimit) {
-      throw new Error('Use amount exceeds maximum limit');
+      throw new PointNotEnoughError(PointManager.ERROR_MESSAGES.INSUFFICIENT_POINTS);
     }
   }
 
-  charge(user: UserPoint, amount: number): void {
+
+  add(user: UserPoint, amount: number): void {
     user.point += amount;
+    if (user.point > this.maxPointLimit) {
+      throw new PointExceededError(PointManager.ERROR_MESSAGES.EXCEEDS_POINT_LIMIT);
+    }
     user.updateMillis = Date.now();
   }
 
   use(user: UserPoint, amount: number): void {
     user.point -= amount;
     user.updateMillis = Date.now();
-  }
-  async recordHistory(userId: number, amount: number, type: TransactionType, updateMillis: number): Promise<void> {
-    await this.historyDb.insert(userId, amount, type, updateMillis);
-  }
-  async getHistoriesByUserId(userId: number): Promise<PointHistory[]> {
-    return this.historyDb.selectAllByUserId(userId);
   }
 }
