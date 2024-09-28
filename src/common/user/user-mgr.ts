@@ -1,27 +1,14 @@
-import { UserPointTable } from '../../database/userpoint.table';
-import { UserPoint } from '../../point/point.model';
 import { Injectable } from '@nestjs/common';
+import { RequestValidityError } from '../exceptions/validity-error';
 
 @Injectable()
 export class UserManager {
-  constructor(private readonly userDb: UserPointTable) {}
-
-  async getUser(id: number): Promise<UserPoint> {
-    const user = await this.userDb.selectById(id);
-    if (!user) {
-      throw new Error('User not found');
-    }
-    return user;
-  }
-
-  async updateUserPoint(id: number, point: number): Promise<void> {
-    await this.userDb.insertOrUpdate(id, point);
-  }
+  constructor() {}
 
   validateUserId(id: string): number {
     const userId = Number(id);
     if (isNaN(userId)) {
-      throw new Error('Invalid user ID');
+      throw new RequestValidityError('Invalid user ID');
     }
     return userId;
   }

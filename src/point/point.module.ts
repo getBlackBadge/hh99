@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { PointController } from './point.controller';
-import { PointService } from './point.service';
+import { PointController } from './controller/point.controller';
+import { PointService } from './service/point.service';
 import { UserPointTable } from '../database/userpoint.table';
 import { PointHistoryTable } from '../database/pointhistory.table';
 import { UserModule } from '../common/user/user-mgr.module';
